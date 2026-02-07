@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Rose Day 🌹</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="text/javascript" src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+</head>
+<body>
+
+<!-- Onboarding -->
+<div id="onboarding">
+  <div class="onboard-emoji">🌹</div>
+  <div class="onboard-text">I have something<br>for you...<br>Wanna see?</div>
+  <div class="btn-row">
+    <button class="btn btn-yes" id="btnYes">Yes!</button>
+    <button class="btn btn-no" id="btnNo">No</button>
+  </div>
+  <div class="nag-msg" id="nagMsg"></div>
+</div>
+
+<!-- Main Screen -->
+<div id="main-screen">
+  <!-- Petals will be injected by JS -->
+  <div class="rose-area">
+    <div class="rose-wrapper">
+      <div class="heart-ripple-container" id="heartRipples"></div>
+      <div class="rose-container">
+      <iframe id="roseIframe" allow="autoplay; fullscreen; xr-spatial-tracking"
+        style="opacity:0; transition: opacity 1.5s ease;">
+      </iframe>
+      <div class="rose-overlay"></div>
+      <div class="sparkle-ring" id="sparkleRing"></div>
+    </div>
+    </div>
+    <div class="greeting-text">
+      <div class="happy-rose-day">This is for you</div>
+      <div class="name-text" id="nameDisplay"></div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

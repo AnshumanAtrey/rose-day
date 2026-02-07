@@ -1,0 +1,592 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: "Poppins", sans-serif;
+    background: #1a0a0a;
+}
+
+/* ── Onboarding Screen ── */
+#onboarding {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #2d0a0a 0%, #0d0000 100%);
+    z-index: 100;
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+#onboarding.hide {
+    opacity: 0;
+    transform: scale(1.1);
+    pointer-events: none;
+}
+
+.onboard-emoji {
+    font-size: clamp(50px, 12vw, 90px);
+    animation: gentleBounce 2s infinite;
+}
+
+.onboard-text {
+    font-family: "Great Vibes", cursive;
+    font-size: clamp(28px, 7vw, 52px);
+    color: #f8c8c8;
+    text-align: center;
+    margin: 20px 15px 35px;
+    line-height: 1.4;
+    text-shadow: 0 0 30px rgba(255, 100, 100, 0.4);
+}
+
+.btn-row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn {
+    padding: 14px 42px;
+    border: 2px solid;
+    border-radius: 50px;
+    font-family: "Poppins", sans-serif;
+    font-size: clamp(15px, 3.5vw, 18px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.btn-yes {
+    background: linear-gradient(135deg, #e63946, #c21e2b);
+    border-color: #ff6b7a;
+    color: #fff;
+    box-shadow: 0 4px 25px rgba(230, 57, 70, 0.5);
+}
+.btn-yes:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 35px rgba(230, 57, 70, 0.7);
+}
+
+.btn-no {
+    background: transparent;
+    border-color: #ff6b7a55;
+    color: #f8a0a0;
+}
+.btn-no:hover {
+    border-color: #ff6b7a;
+}
+
+.nag-msg {
+    margin-top: 20px;
+    color: #ff8a95;
+    font-size: clamp(14px, 3vw, 17px);
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    text-align: center;
+    padding: 0 20px;
+}
+.nag-msg.show {
+    opacity: 1;
+}
+
+/* ── Main Screen ── */
+#main-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 40%, #2d0a0a 0%, #0d0000 70%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s ease;
+}
+#main-screen.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ── Floating Petals ── */
+.petal {
+    position: fixed;
+    width: var(--size);
+    height: var(--size);
+    opacity: 0;
+    z-index: 10;
+    pointer-events: none;
+    animation: floatDown var(--dur) var(--delay) ease-in-out infinite;
+}
+
+@keyframes floatDown {
+    0% {
+        transform: translate(0, -60px) rotate(0deg) scale(0.5);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.9;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(var(--drift), calc(100vh + 60px))
+            rotate(var(--spin));
+        opacity: 0;
+    }
+}
+
+/* ── Rose Container ── */
+.rose-area {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+}
+
+/* ── 3D Rose Container ── */
+.rose-container {
+    position: relative;
+    width: clamp(220px, 55vw, 380px);
+    height: clamp(220px, 55vw, 380px);
+    animation: roseAppear 2s ease-out forwards;
+    transform: scale(0);
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+@keyframes roseAppear {
+    0% {
+        transform: scale(0) rotate(-30deg);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.rose-container iframe {
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    top: 0%;
+    left: -25%;
+    border: none;
+    pointer-events: none;
+}
+
+.rose-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    z-index: 2;
+    cursor: default;
+}
+
+/* ── Wrapper to align rose + ripples ── */
+.rose-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Pixelated Heart Ripples ── */
+.heart-ripple-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.heart-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: scale(0.2);
+    transform-origin: 0px 0px;
+    opacity: 0;
+    image-rendering: pixelated;
+    animation: heartRippleOut var(--dur) var(--delay) ease-out infinite;
+}
+
+/* Pixel-art heart built from box-shadow on a tiny 1px element */
+.heart-ripple .pixel-heart {
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    /* 13x12 pixel heart grid */
+    box-shadow:
+    /* Row 1 */
+        2px 0 0 0 var(--clr),
+        3px 0 0 0 var(--clr),
+        4px 0 0 0 var(--clr),
+        8px 0 0 0 var(--clr),
+        9px 0 0 0 var(--clr),
+        10px 0 0 0 var(--clr),
+        /* Row 2 */ 1px 1px 0 0 var(--clr),
+        2px 1px 0 0 var(--clr),
+        3px 1px 0 0 var(--clr),
+        4px 1px 0 0 var(--clr),
+        5px 1px 0 0 var(--clr),
+        7px 1px 0 0 var(--clr),
+        8px 1px 0 0 var(--clr),
+        9px 1px 0 0 var(--clr),
+        10px 1px 0 0 var(--clr),
+        11px 1px 0 0 var(--clr),
+        /* Row 3 */ 0px 2px 0 0 var(--clr),
+        1px 2px 0 0 var(--clr),
+        2px 2px 0 0 var(--clr),
+        3px 2px 0 0 var(--clr),
+        4px 2px 0 0 var(--clr),
+        5px 2px 0 0 var(--clr),
+        6px 2px 0 0 var(--clr),
+        7px 2px 0 0 var(--clr),
+        8px 2px 0 0 var(--clr),
+        9px 2px 0 0 var(--clr),
+        10px 2px 0 0 var(--clr),
+        11px 2px 0 0 var(--clr),
+        12px 2px 0 0 var(--clr),
+        /* Row 4 */ 0px 3px 0 0 var(--clr),
+        1px 3px 0 0 var(--clr),
+        2px 3px 0 0 var(--clr),
+        3px 3px 0 0 var(--clr),
+        4px 3px 0 0 var(--clr),
+        5px 3px 0 0 var(--clr),
+        6px 3px 0 0 var(--clr),
+        7px 3px 0 0 var(--clr),
+        8px 3px 0 0 var(--clr),
+        9px 3px 0 0 var(--clr),
+        10px 3px 0 0 var(--clr),
+        11px 3px 0 0 var(--clr),
+        12px 3px 0 0 var(--clr),
+        /* Row 5 */ 0px 4px 0 0 var(--clr),
+        1px 4px 0 0 var(--clr),
+        2px 4px 0 0 var(--clr),
+        3px 4px 0 0 var(--clr),
+        4px 4px 0 0 var(--clr),
+        5px 4px 0 0 var(--clr),
+        6px 4px 0 0 var(--clr),
+        7px 4px 0 0 var(--clr),
+        8px 4px 0 0 var(--clr),
+        9px 4px 0 0 var(--clr),
+        10px 4px 0 0 var(--clr),
+        11px 4px 0 0 var(--clr),
+        12px 4px 0 0 var(--clr),
+        /* Row 6 */ 1px 5px 0 0 var(--clr),
+        2px 5px 0 0 var(--clr),
+        3px 5px 0 0 var(--clr),
+        4px 5px 0 0 var(--clr),
+        5px 5px 0 0 var(--clr),
+        6px 5px 0 0 var(--clr),
+        7px 5px 0 0 var(--clr),
+        8px 5px 0 0 var(--clr),
+        9px 5px 0 0 var(--clr),
+        10px 5px 0 0 var(--clr),
+        11px 5px 0 0 var(--clr),
+        /* Row 7 */ 2px 6px 0 0 var(--clr),
+        3px 6px 0 0 var(--clr),
+        4px 6px 0 0 var(--clr),
+        5px 6px 0 0 var(--clr),
+        6px 6px 0 0 var(--clr),
+        7px 6px 0 0 var(--clr),
+        8px 6px 0 0 var(--clr),
+        9px 6px 0 0 var(--clr),
+        10px 6px 0 0 var(--clr),
+        /* Row 8 */ 3px 7px 0 0 var(--clr),
+        4px 7px 0 0 var(--clr),
+        5px 7px 0 0 var(--clr),
+        6px 7px 0 0 var(--clr),
+        7px 7px 0 0 var(--clr),
+        8px 7px 0 0 var(--clr),
+        9px 7px 0 0 var(--clr),
+        /* Row 9 */ 4px 8px 0 0 var(--clr),
+        5px 8px 0 0 var(--clr),
+        6px 8px 0 0 var(--clr),
+        7px 8px 0 0 var(--clr),
+        8px 8px 0 0 var(--clr),
+        /* Row 10 */ 5px 9px 0 0 var(--clr),
+        6px 9px 0 0 var(--clr),
+        7px 9px 0 0 var(--clr),
+        /* Row 11 */ 6px 10px 0 0 var(--clr);
+    transform: translate(-6px, -5px); /* center the heart */
+    image-rendering: pixelated;
+}
+
+@keyframes heartRippleOut {
+    0% {
+        transform: scale(0.3);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(var(--max-scale));
+        opacity: 0;
+    }
+}
+
+/* ── Sparkle Ring ── */
+.sparkle-ring {
+    position: absolute;
+    width: clamp(280px, 65vw, 440px);
+    height: clamp(280px, 65vw, 440px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #ffd700;
+    border-radius: 50%;
+    box-shadow:
+        0 0 8px #ffd700,
+        0 0 16px #ffd70088;
+    animation: sparkleAnim var(--dur) var(--delay) ease-in-out infinite;
+}
+
+@keyframes sparkleAnim {
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ── Text ── */
+.greeting-text {
+    margin-top: clamp(25px, 5vw, 40px);
+    text-align: center;
+    animation: textAppear 1.5s 1s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+@keyframes textAppear {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.happy-rose-day {
+    font-family: "Great Vibes", cursive;
+    font-size: clamp(38px, 10vw, 72px);
+    background: linear-gradient(
+        135deg,
+        #ffd700 0%,
+        #ffec80 25%,
+        #ffd700 50%,
+        #daa520 75%,
+        #ffd700 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+    filter: drop-shadow(0 2px 10px rgba(255, 215, 0, 0.4));
+    line-height: 1.3;
+}
+
+@keyframes shimmer {
+    to {
+        background-position: 200% center;
+    }
+}
+
+.name-text {
+    font-family: "Great Vibes", cursive;
+    font-size: clamp(30px, 8vw, 58px);
+    background: linear-gradient(
+        135deg,
+        #ffc0cb,
+        #ff8fa3,
+        #ff6b81,
+        #ff8fa3,
+        #ffc0cb
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+    margin-top: 5px;
+    filter: drop-shadow(0 2px 10px rgba(255, 100, 130, 0.3));
+}
+
+/* ── Hearts floating ── */
+.heart-float {
+    position: fixed;
+    font-size: var(--size);
+    opacity: 0;
+    z-index: 5;
+    pointer-events: none;
+    line-height: 1;
+    text-align: center;
+    transform-origin: center center;
+    animation: heartUp var(--dur) var(--delay) ease-in infinite;
+}
+
+@keyframes heartUp {
+    0% {
+        transform: translateX(-50%) translateY(0) scale(0);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.7;
+        transform: translateX(-50%) translateY(-30px) scale(1);
+    }
+    100% {
+        transform: translateX(-50%) translateY(calc(-100vh - 50px)) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* ── Edge flowers (all 4 sides) ── */
+.garden-edge {
+    position: fixed;
+    display: flex;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.garden-bottom {
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0 10px;
+}
+
+.garden-top {
+    top: -5px;
+    left: 0;
+    right: 0;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0 10px;
+}
+
+.garden-left {
+    left: -5px;
+    top: 0;
+    bottom: 0;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.garden-right {
+    right: -5px;
+    top: 0;
+    bottom: 0;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.garden-flower {
+    font-size: clamp(20px, 5vw, 36px);
+    animation: gardenGrow var(--dur) var(--delay) ease-out forwards;
+    opacity: 0;
+    transform: scale(0);
+}
+
+@keyframes gardenGrow {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+    }
+    60% {
+        transform: scale(1.2) rotate(10deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.garden-flower span {
+    display: inline-block;
+    animation: sway 3s var(--delay) ease-in-out infinite alternate;
+}
+
+@keyframes sway {
+    0% {
+        transform: rotate(-10deg);
+    }
+    100% {
+        transform: rotate(10deg);
+    }
+}
+
+@keyframes gentleBounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+/* ── Bloom burst particles ── */
+.bloom-particle {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 25;
+    opacity: 0;
+}
+
+@keyframes burstOut {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+    .btn {
+        padding: 12px 32px;
+    }
+    .btn-row {
+        gap: 12px;
+    }
+}
